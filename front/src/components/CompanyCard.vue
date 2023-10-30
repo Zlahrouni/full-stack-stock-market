@@ -6,22 +6,23 @@ export default {
     company: Company,
   },
 };
+
+
+
 </script>
 
 <template>
-  <div class="card">
-    <h3>{{ company.name }}</h3>
-    <p>Symbol: {{ company.symbol }}</p>
-    <p>Stock Price: {{ company.stockQuote.get("c") }}</p>
+  <div class="card w-25">
+    <div class="card-body">
+      <h3>{{ company.name }} </h3> <p>({{ company.symbol }})</p>
+      <p>Stock Price: {{ company.stockQuote.c }}</p>
     </div>
+
+  </div>
+
 </template>
 
 
 <style scoped>
-/* Add your card styling here */
-.card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-}
+
 </style>

@@ -1,7 +1,9 @@
+import StockQuoteResponse from "@/models/StockQuoteResponse.vue";
+
 export class Company {
     name: string;
     symbol: string;
-    stockQuote: Map<string, number>;
+    stockQuote: StockQuoteResponse;
 
     constructor(name: string, symbol: string, stockQuote: Map<string, number>) {
         this.name = name;
