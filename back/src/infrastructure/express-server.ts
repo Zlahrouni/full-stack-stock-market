@@ -1,6 +1,8 @@
 import express, { Express } from 'express';
 import bodyParser from "body-parser";
+import cors from "cors";
 import {ExpressRouter} from "./express-router";
+
 
 export class ExpressServer {
     private express : Express = express();
@@ -15,6 +17,7 @@ export class ExpressServer {
 
     private configureBodyParser(): void {
         this.express.use(bodyParser.json());
+        this.express.use(cors());
     }
 
     bootstrap(): void {

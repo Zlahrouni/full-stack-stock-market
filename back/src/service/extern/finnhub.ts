@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {StockQuoteResponse} from "../../model/StcokQuoteResponse";
+import {StockQuoteResponse} from "../../model/StockQuoteResponse";
 
 
 //const apiKey = process.env.FINNHUB_API_KEY;

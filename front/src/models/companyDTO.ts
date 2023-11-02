@@ -1,4 +1,4 @@
-import {StockQuoteResponse} from "./StockQuoteResponse";
+import type { StockQuoteResponse } from "./types/StockQuoteResponse";
 
 export class CompanyDTO {
     name: string;

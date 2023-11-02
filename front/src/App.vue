@@ -12,7 +12,7 @@ import { RouterLink, RouterView } from 'vue-router'
       </nav>
     </header>
     <RouterView />
-    <footer class="text-center position-absolute bottom-0 w-100">
+    <footer class="fixed-bottom text-center ">
       <div>© <a href="https://ziadlahrouni.com" target="_blank"> ZIAD LAHROUNI</a>  2023 - ALL RIGHTS RESERVED</div>
     </footer>
   </div>
