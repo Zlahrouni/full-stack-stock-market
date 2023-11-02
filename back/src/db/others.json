@@ -1,0 +1,27 @@
+[
+  { "name": "Facebook Inc.", "symbol": "FB" },
+  { "name": "Alphabet Inc.", "symbol": "GOOGL" },
+  { "name": "Microsoft Corporation", "symbol": "MSFT" },
+  { "name": "Netflix Inc.", "symbol": "NFLX" },
+  { "name": "Tesla Inc.", "symbol": "TSLA" },
+  { "name": "Twitter Inc.", "symbol": "TWTR" },
+  { "name": "Alibaba Group Holding Limited", "symbol": "BABA" },
+  { "name": "Baidu Inc.", "symbol": "BIDU" },
+  { "name": "Intel Corporation", "symbol": "INTC" },
+  { "name": "NVIDIA Corporation", "symbol": "NVDA" },
+  { "name": "PayPal Holdings Inc.", "symbol": "PYPL" },
+  { "name": "QUALCOMM Incorporated", "symbol": "QCOM" },
+  { "name": "Adobe Inc.", "symbol": "ADBE" },
+  { "name": "Cisco Systems Inc.", "symbol": "CSCO" },
+  { "name": "Comcast Corporation", "symbol": "CMCSA" },
+  { "name": "Costco Wholesale Corporation", "symbol": "COST" },
+  { "name": "eBay Inc.", "symbol": "EBAY" },
+  { "name": "Netflix Inc.", "symbol": "NFLX" },
+  { "name": "PepsiCo Inc.", "symbol": "PEP" },
+  { "name": "Starbucks Corporation", "symbol": "SBUX" },
+  { "name": "Tesla Inc.", "symbol": "TSLA"},
+  { "name": "The Walt Disney Company", "symbol": "DIS" },
+  { "name": "Verizon Communications Inc.", "symbol": "VZ" },
+  { "name": "Walmart Inc.", "symbol": "WMT" }
+
+]

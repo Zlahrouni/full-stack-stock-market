@@ -1,5 +1,9 @@
-<script setup lang="ts">
-type StockQuoteResponse = {
+<template>
+  <!-- Your template code here -->
+</template>
+
+<script  lang="ts">
+export type StockQuoteResponse = {
   c: number;
   pc: number;
   h: number;
@@ -8,3 +12,7 @@ type StockQuoteResponse = {
   t: number;
 };
 </script>
+
+<style scoped>
+/* Your CSS styling here */
+</style>
