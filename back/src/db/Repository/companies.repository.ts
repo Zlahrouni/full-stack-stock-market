@@ -8,7 +8,7 @@ interface CompanyRow {
 }
 
 export class CompaniesRepository {
-    private static readonly dbPath = '../stockhub.db';
+    private static readonly dbPath = 'src/db/stockhub.db';
 
     static async getAllCompanies(): Promise<Company[]> {
         const db = new sqlite3.Database(this.dbPath);
