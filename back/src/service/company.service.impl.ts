@@ -3,12 +3,13 @@ import {Company} from "../model/company";
 import {DbHandler} from "../db/handler";
 import {CompanyDTO} from "../model/companyDTO";
 import {getStockQuote} from "./extern/finnhub";
+import {CompaniesRepository} from "../db/Repository/companies.repository";
 
 export class CompanyServiceImpl implements CompanyService {
 
 
     async getAllCompanies(): Promise<CompanyDTO[]> {
-        const companies: Company[] = DbHandler.readJSONFile(); // Read your companies from JSON
+        const companies: Company[] = await CompaniesRepository.getAllCompanies(); // Read your companies from JSON
         const companiesDTO: CompanyDTO[] = [];
 
         for (const company of companies) {
