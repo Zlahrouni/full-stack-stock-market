@@ -4,12 +4,15 @@ import { ExpressServer } from './express-server';
 import * as dotenv from 'dotenv';
 import {CompanyService} from "../service/company.service";
 import {CompanyServiceImpl} from "../service/company.service.impl";
+import {UserService} from "../service/user.service";
+import {UserServiceImpl} from "../service/user.service.impl";
 
 export class ExpressApplication {
     private expressRouter!: ExpressRouter;
     private port!: string;
     private server!: ExpressServer;
     private companyService!: CompanyService;
+    private userService!: UserService;
 
     constructor() {
         this.configureApplication();
@@ -39,10 +42,11 @@ export class ExpressApplication {
 
     private configureServices(): void {
         this.companyService = new CompanyServiceImpl();
+        this.userService = new UserServiceImpl();
     }
 
     private configureExpressRouter(): void {
-        this.expressRouter = new ExpressRouter(this.companyService);
+        this.expressRouter = new ExpressRouter(this.companyService, this.userService);
     }
 
     private configureServer(): void {

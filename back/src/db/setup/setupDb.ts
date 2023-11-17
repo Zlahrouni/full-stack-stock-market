@@ -54,7 +54,6 @@ function dropTables(): Promise<void> {
 
 async function insertData(): Promise<void> {
     await insertCompaniesData();
-    await insertUserData();
 }
 
 
@@ -65,7 +64,8 @@ function createTables(): Promise<void> {
               CREATE TABLE IF NOT EXISTS companies (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                symbol TEXT NOT NULL
+                symbol TEXT NOT NULL,
+                website TEXT
               );
             `, (err) => {
                 if (err) reject(err);
@@ -75,8 +75,8 @@ function createTables(): Promise<void> {
             db.run(`
               CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                age INTEGER NOT NULL
+                username TEXT NOT NULL,
+                password TEXT NOT NULL
               );
             `, (err) => {
                 if (err) reject(err);
@@ -89,39 +89,37 @@ function createTables(): Promise<void> {
 
 function insertCompaniesData() : Promise<void> {
     const data = [
-        { name: "Apple Inc.", symbol: "AAPL" },
-        { name: "Amazon.com Inc.", symbol: "AMZN" },
-        { name: "Facebook Inc.", symbol: "FB" },
-        { name: "Alphabet Inc.", symbol: "GOOGL" },
-        { name: "Microsoft Corporation", symbol: "MSFT" },
-        { name: "Netflix Inc.", symbol: "NFLX" },
-        { name: "Tesla Inc.", symbol: "TSLA" },
-        { name: "Twitter Inc.", symbol: "TWTR" },
-        { name: "Alibaba Group Holding Limited", symbol: "BABA" },
-        { name: "Baidu Inc.", symbol: "BIDU" },
-        { name: "Intel Corporation", symbol: "INTC" },
-        { name: "NVIDIA Corporation", symbol: "NVDA" },
-        { name: "PayPal Holdings Inc.", symbol: "PYPL" },
-        { name: "QUALCOMM Incorporated", symbol: "QCOM" },
-        { name: "Adobe Inc.", symbol: "ADBE" },
-        { name: "Cisco Systems Inc.", symbol: "CSCO" },
-        { name: "Comcast Corporation", symbol: "CMCSA" },
-        { name: "Costco Wholesale Corporation", symbol: "COST" },
-        { name: "eBay Inc.", symbol: "EBAY" },
-        { name: "Netflix Inc.", symbol: "NFLX" },
-        { name: "PepsiCo Inc.", symbol: "PEP" },
-        { name: "Starbucks Corporation", symbol: "SBUX" },
-        { name: "Tesla Inc.", symbol: "TSLA"},
-        { name: "The Walt Disney Company", symbol: "DIS" },
-        { name: "Verizon Communications Inc.", symbol: "VZ" },
-        { name: "Walmart Inc.", symbol: "WMT" }
+        { name: "Apple Inc.", symbol: "AAPL", website: "https://www.apple.com/" },
+        { name: "Amazon.com Inc.", symbol: "AMZN", website: "https://www.amazon.com/" },
+        { name: "Facebook Inc.", symbol: "FB", website: "https://www.facebook.com/" },
+        { name: "Alphabet Inc.", symbol: "GOOGL", website: "https://abc.xyz/" },
+        { name: "Microsoft Corporation", symbol: "MSFT", website: "https://www.microsoft.com/" },
+        { name: "Netflix Inc.", symbol: "NFLX", website: "https://www.netflix.com/" },
+        { name: "Tesla Inc.", symbol: "TSLA", website: "https://www.tesla.com/" },
+        { name: "Twitter Inc.", symbol: "TWTR", website: "https://twitter.com/" },
+        { name: "Alibaba Group Holding Limited", symbol: "BABA", website: "https://www.alibabagroup.com/" },
+        { name: "Baidu Inc.", symbol: "BIDU", website: "https://www.baidu.com/" },
+        { name: "Intel Corporation", symbol: "INTC", website: "https://www.intel.com/" },
+        { name: "NVIDIA Corporation", symbol: "NVDA", website: "https://www.nvidia.com/" },
+        { name: "PayPal Holdings Inc.", symbol: "PYPL", website: "https://www.paypal.com/" },
+        { name: "QUALCOMM Incorporated", symbol: "QCOM", website: "https://www.qualcomm.com/" },
+        { name: "Adobe Inc.", symbol: "ADBE", website: "https://www.adobe.com/" },
+        { name: "Cisco Systems Inc.", symbol: "CSCO", website: "https://www.cisco.com/" },
+        { name: "Comcast Corporation", symbol: "CMCSA", website: "https://corporate.comcast.com/" },
+        { name: "Costco Wholesale Corporation", symbol: "COST", website: "https://www.costco.com/" },
+        { name: "eBay Inc.", symbol: "EBAY", website: "https://www.ebay.com/" },
+        { name: "PepsiCo Inc.", symbol: "PEP", website: "https://www.pepsico.com/" },
+        { name: "Starbucks Corporation", symbol: "SBUX", website: "https://www.starbucks.com/" },
+        { name: "The Walt Disney Company", symbol: "DIS", website: "https://www.thewaltdisneycompany.com/" },
+        { name: "Verizon Communications Inc.", symbol: "VZ", website: "https://www.verizon.com/" },
+        { name: "Walmart Inc.", symbol: "WMT", website: "https://www.walmart.com/" }
     ];
 
     return new Promise((resolve, reject) => {
-        const insertStatement = db.prepare('INSERT INTO companies (name, symbol) VALUES (?, ?)');
+        const insertStatement = db.prepare('INSERT INTO companies (name, symbol, website) VALUES (?, ?, ?)');
 
         data.forEach((stock) => {
-            insertStatement.run(stock.name, stock.symbol, (err: any) => {
+            insertStatement.run(stock.name, stock.symbol, stock.website, (err: any) => {
                 if (err) reject(err);
             });
         });
@@ -131,23 +129,4 @@ function insertCompaniesData() : Promise<void> {
 
 }
 
-function insertUserData() : Promise<void> {
-    const userData = [
-        { name: "zeus", age: 999 },
-        { name: "poseidon", age: 888 },
-
-    ];
-
-    return new Promise((resolve, reject) => {
-        const insertStatement = db.prepare('INSERT INTO users (name, age) VALUES (?, ?)');
-
-        userData.forEach((user) => {
-            insertStatement.run(user.name, user.age, (err: any) => {
-                if (err) reject(err);
-            });
-        });
-
-        insertStatement.finalize(() => resolve());
-    });
-}
 

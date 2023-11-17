@@ -6,4 +6,8 @@ export class CompanyController {
     getAllCompanies() {
         return this.CompanyService.getAllCompanies();
     }
+
+    getCompanyBySymbol(symbol: string) {
+        return this.CompanyService.getCompanyBySymbol(symbol);
+    }
 }

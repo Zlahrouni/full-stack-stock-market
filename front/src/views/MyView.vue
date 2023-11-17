@@ -12,9 +12,6 @@ onMounted(async () => {
   try {
     companies.value = await getAllCompanies();
     loading.value = false;
-
-
-    console.log("ses")
   } catch (error) {
     console.error('Error:', error);
     loading.value = false;

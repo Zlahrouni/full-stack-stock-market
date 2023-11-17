@@ -1,9 +1,9 @@
 import axios from 'axios';
-import {StockQuoteResponse} from "../../model/StockQuoteResponse";
+import {StockQuoteResponse} from "../../model/types/StockQuoteResponse";
 
 
-//const apiKey = process.env.FINNHUB_API_KEY;
-const apiKey = "ckvp05hr01qq199j4hr0ckvp05hr01qq199j4hrg";
+const apiKey = process.env.FINNHUB_API_KEY;
+
 
 export async function getStockQuote(symbol: string): Promise<StockQuoteResponse> {
     try {
