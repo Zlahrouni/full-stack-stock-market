@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import bodyParser from "body-parser";
 import cors from "cors";
 import {ExpressRouter} from "./express-router";
+import path from "path";
 
 
 export class ExpressServer {
@@ -11,13 +12,14 @@ export class ExpressServer {
         private expressRouter: ExpressRouter,
         private port: string,
     ) {
-        this.configureBodyParser();
+        this.configureExpress();
         this.configureRoutes();
     }
 
-    private configureBodyParser(): void {
+    private configureExpress(): void {
         this.express.use(bodyParser.json());
         this.express.use(cors());
+        this.express.use('/assets', express.static(path.join(__dirname, '../assets')));
     }
 
     bootstrap(): void {

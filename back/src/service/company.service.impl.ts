@@ -1,6 +1,5 @@
 import {CompanyService} from "./company.service";
 import {Company} from "../model/company";
-import {DbHandler} from "../db/handler";
 import {CompanyDTO} from "../model/companyDTO";
 import {getStockQuote} from "./extern/finnhub";
 import {CompaniesRepository} from "../db/Repository/companies.repository";
@@ -21,6 +20,7 @@ export class CompanyServiceImpl implements CompanyService {
                 companyDTO.symbol = company.symbol;
                 companyDTO.name = company.name;
                 companyDTO.stockQuote = stockQuote;
+                companyDTO.website = company.website;
 
                 companiesDTO.push(companyDTO);
             } catch (error) {
@@ -35,8 +35,21 @@ export class CompanyServiceImpl implements CompanyService {
         // Now, the companiesDTO array contains the stock quotes
         return companiesDTO;
     }
-    getCompanyBySymbol(symbol: string): Company | null {
-        throw new Error("Method not implemented.");
+    async getCompanyBySymbol(symbol: string): Promise<CompanyDTO | null>  {
+        const company: Company | null = await CompaniesRepository.getCompanyBySymbol(symbol);
+        const companyDTO: CompanyDTO = {} as CompanyDTO;
+        if (company != null) {
+
+            const stockQuote = await getStockQuote(company.symbol);
+
+            companyDTO.symbol = company.symbol;
+            companyDTO.name = company.name;
+            companyDTO.stockQuote = stockQuote;
+            companyDTO.website = company.website;
+
+            return companyDTO;
+        }
+        return null;
     }
 
 }

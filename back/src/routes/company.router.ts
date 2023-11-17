@@ -14,11 +14,18 @@ export class CompanyRouter {
             try {
                 console.log("Serving request for /getall")
                 const companies  = await this.companyController.getAllCompanies();
-                // to test if the arrow function is working
-                //companies[0].stockQuote.pc = 60000;
-                console.log(companies);
-
                 res.status(200).send(companies);
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('Internal Server Error');
+            }
+        });
+
+        this.router.get('/get/:symbol', async (req, res) => {
+            try {
+                console.log("Serving request for /get/" + req.params.symbol)
+                const company  = await this.companyController.getCompanyBySymbol(req.params.symbol);
+                res.status(200).send(company);
             } catch (error) {
                 console.error(error);
                 res.status(500).send('Internal Server Error');
