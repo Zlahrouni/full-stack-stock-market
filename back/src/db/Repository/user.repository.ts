@@ -1,4 +1,4 @@
-import {User} from "../../model/user";
+import {User} from "../../model/user.model";
 import sqlite3 from "sqlite3";
 import bcrypt from "bcrypt";
 
@@ -42,23 +42,25 @@ export class UserRepository {
     }
 
     static async getUserByUsername(username: string): Promise<User | null> {
-        const db = new sqlite3.Database(this.dbPath);
-        const query = "SELECT * FROM users WHERE username = ? LIMIT 1";
+        // const db = new sqlite3.Database(this.dbPath);
+        // const query = "SELECT * FROM users WHERE username = ? LIMIT 1";
+        //
+        //
+        // return new Promise<UserModel | null>((resolve, reject) => {
+        //     db.get(query, [username], (err, row : UserModel) => {
+        //         db.close();
+        //         if (err) {
+        //             reject(err);
+        //         } else {
+        //             if (row) {
+        //                 resolve(new UserModel(row.username, row.password));
+        //             } else {
+        //                 resolve(null);
+        //             }
+        //         }
+        //     });
+        // });
 
-
-        return new Promise<User | null>((resolve, reject) => {
-            db.get(query, [username], (err, row : User) => {
-                db.close();
-                if (err) {
-                    reject(err);
-                } else {
-                    if (row) {
-                        resolve(new User(row.username, row.password));
-                    } else {
-                        resolve(null);
-                    }
-                }
-            });
-        });
+        return null;
     }
 }

@@ -1,10 +1,10 @@
-import {Column, Model, Table} from "sequelize-typescript";
+import {Column, DataType, Model, Table} from "sequelize-typescript";
 
 
 @Table({ tableName: 'company' })
-export class CompanyModel extends Model<CompanyModel>{
+export class Company extends Model{
 
-    @Column({ primaryKey: true })
+    @Column({ primaryKey: true, type: DataType.UUID, defaultValue: DataType.UUIDV4 })
     declare id: string;
     @Column({ allowNull: false })
     declare name: string;

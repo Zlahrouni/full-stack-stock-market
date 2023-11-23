@@ -1,16 +1,18 @@
 import {CompanyService} from "./company.service";
-import {Company} from "../model/company";
-import {CompanyDTO} from "../model/companyDTO";
+
+import {CompanyDTO} from "../model/DTO/companyDTO";
 import {getStockQuote} from "./extern/finnhub";
 import {CompaniesRepository} from "../db/Repository/companies.repository";
+import {Company} from "../model/Campany.model";
 
 export class CompanyServiceImpl implements CompanyService {
 
 
     async getAllCompanies(): Promise<CompanyDTO[]> {
-        const companies: Company[] = await CompaniesRepository.getAllCompanies(); // Read your companies from JSON
+        const companies: Company[] = await Company.findAll(); // Read your companies from JSON
         const companiesDTO: CompanyDTO[] = [];
-
+        console.log("companies :");
+        console.log(companies);
         for (const company of companies) {
             try {
                 // Fetch the stock quote for the company's symbol

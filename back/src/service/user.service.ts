@@ -1,9 +1,9 @@
-import {User} from "../model/user";
+import {UserModel} from "../model/user.model";
 
 export interface UserService {
-    getAllUsers(): Promise<User[]>;
-    addUser(user: User): Promise<User>;
-    updateUser(user: User): Promise<User>;
+    getAllUsers(): Promise<UserModel[]>;
+    addUser(user: UserModel): Promise<UserModel>;
+    updateUser(user: UserModel): Promise<UserModel>;
     deleteUser(id: number): Promise<void>;
-    getUserByUsername(username: string): Promise<User | null>;
+    getUserByUsername(username: string): Promise<UserModel | null>;
 }

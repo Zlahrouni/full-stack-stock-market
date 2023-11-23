@@ -15,7 +15,7 @@
                   </div>
                   <div v-if="done">
                     <div v-if="createdSuccess" class="alert alert-success" role="alert">
-                      User created successfully. you can <router-link to="/login">log in</router-link> now
+                      UserModel created successfully. you can <router-link to="/login">log in</router-link> now
                     </div>
                     <div v-else class="alert alert-danger" role="alert">
                       {{message}}
@@ -114,7 +114,7 @@ export default {
         return;
       }
 
-      const user = new User(this.formData.username, this.formData.password);
+      const user = new UserModel(this.formData.username, this.formData.password);
       const response = await addUser(user);
 
       if(response.ok) {

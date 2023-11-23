@@ -1,5 +1,5 @@
 import {UserService} from "./user.service";
-import {User} from "../model/user";
+import {User} from "../model/user.model";
 import {UserRepository} from "../db/Repository/user.repository";
 
 
