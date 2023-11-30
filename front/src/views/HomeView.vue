@@ -4,6 +4,7 @@ import {ref, onMounted} from 'vue';
 import type {CompanyDTO} from "@/models/companyDTO";
 import {getAllCompanies} from "@/api/companyApi";
 import CompanyCard from "@/components/CompanyCard.vue";
+import {getCookie} from "@/utils/coockies.utils";
 
 let companies = ref([] as CompanyDTO[]);
 const loading = ref(true);
@@ -17,6 +18,9 @@ onMounted(async () => {
     loading.value = false;
 
   }
+
+  const token = getCookie('token');
+
 });
 
 

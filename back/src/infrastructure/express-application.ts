@@ -7,7 +7,7 @@ import {CompanyServiceImpl} from "../service/company.service.impl";
 import {UserService} from "../service/user.service";
 import {UserServiceImpl} from "../service/user.service.impl";
 import {sequelize} from "../db/sequelize.config";
-import {Company} from "../model/Campany.model";
+import {Company} from "../model/company.model";
 
 export class ExpressApplication {
     private expressRouter!: ExpressRouter;

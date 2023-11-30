@@ -1,6 +1,6 @@
 
 import sqlite3 from 'sqlite3';
-import {Company} from "../../model/Campany.model";
+import {Company} from "../../model/company.model";
 
 interface CompanyRow {
     id: number;

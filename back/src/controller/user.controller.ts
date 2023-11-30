@@ -24,4 +24,9 @@ export class UserController {
     async getUserByUsername(username: string) {
         return await this.UserService.getUserByUsername(username);
     }
+
+    async checkPassword(password: string, dbPass: string) {
+        return await this.UserService.checkPassword(password, dbPass);
+    }
+
 }

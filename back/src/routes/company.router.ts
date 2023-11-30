@@ -25,7 +25,13 @@ export class CompanyRouter {
             try {
                 console.log("Serving request for /get/" + req.params.symbol)
                 const company  = await this.companyController.getCompanyBySymbol(req.params.symbol);
-                res.status(200).send(company);
+                if(company != null) {
+                    res.status(200).send(company);
+                    return;
+                } else {
+                    res.status(400).send('Company not found');
+                    return;
+                }
             } catch (error) {
                 console.error(error);
                 res.status(500).send('Internal Server Error');

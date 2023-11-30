@@ -41,7 +41,7 @@ export default {
 
 <template>
   <div class="card w-25">
-    <router-link :to="`/${company.symbol}`">
+    <router-link :to="`/company/${company.symbol}`">
     <div class="card-body" >
 
       <div class="card-title">

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import MyView from "@/views/MyView.vue";
+import MyView from "@/views/HomeView.vue";
 import AboutView from "@/views/AboutView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import CompanyView from "@/views/CompanyView.vue";
@@ -21,7 +21,7 @@ const router = createRouter({
       component: AboutView
     },
     {
-      path: '/:symbol',
+      path: '/company/:symbol',
       name: 'company',
       component: CompanyView,
     },
