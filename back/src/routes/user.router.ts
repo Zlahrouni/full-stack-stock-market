@@ -62,7 +62,13 @@ export class UserRouter {
                 // Create JWT
 
                 const secretKey = 'your-secret-key';
-                const token = jwt.sign({ username: user.username }, secretKey);
+                const uniqueIdentifier = Date.now();
+
+                const tokenPayload = {
+                    username: user.username,
+                    uniqueIdentifier: uniqueIdentifier,
+                };
+                const token = jwt.sign(tokenPayload, secretKey);
                 this.tokenService.setToken(token, user.username);
                 console.log("token: " + token);
                 res.status(200).json({ token });
@@ -74,7 +80,7 @@ export class UserRouter {
         });
 
         // check Token
-        this.router.post('/checkSession', async (req, res) => {
+        this.router.post('/checkToken', async (req, res) => {
             try {
                 console.log("Serving request for /checkSession")
                 // Check if token is valid
@@ -98,6 +104,80 @@ export class UserRouter {
                 console.error(error);
                 res.status(500).json({ error: 'Internal Server Error' });
             }
-        })
+        });
+
+        this.router.get('/logout', async (req, res) => {
+            try {
+
+                console.log("Serving request for /logout")
+                const authorizationHeader = req.headers.authorization;
+
+                // Check if the Authorization header exists
+                if (!authorizationHeader) {
+                    res.status(401).json({ error: 'Not Authorized' });
+                    return;
+                }
+
+                // Split the Authorization header to get the token without "Bearer "
+                const [, token] = authorizationHeader.split(' ');
+                // Check if token is valid
+                const valid = await this.tokenService.checkToken(token);
+                console.log("token valid: " + valid);
+                if(!valid) {
+                    res.status(400).json({ error: 'Invalid token' });
+                    return;
+                }
+
+                // Delete token
+                this.tokenService.removeToken(token);
+                console.log("token deleted");
+                res.status(200).json({ message: 'Logout successful' });
+                return;
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
+        this.router.get('/delete', async (req, res) => {
+            try {
+
+                console.log("Serving request for /delete")
+                const authorizationHeader = req.headers.authorization;
+
+                // Check if the Authorization header exists
+                if (!authorizationHeader) {
+                    res.status(401).json({ error: 'Not Authorized' });
+                    return;
+                }
+
+                // Split the Authorization header to get the token without "Bearer "
+                const [, token] = authorizationHeader.split(' ');
+                // Check if token is valid
+                const valid = await this.tokenService.checkToken(token);
+                console.log("token valid: " + valid);
+                if(!valid) {
+                    res.status(400).json({ error: 'Invalid token' });
+                    return;
+                }
+                const username = await this.tokenService.getUserName(token);
+
+                if(username == null) {
+                    res.status(400).json({ error: 'Invalid token' });
+                    return;
+                }
+                // Delete token
+                this.tokenService.removeToken(token);
+
+                // Delete user
+                await this.userController.deleteUser(username);
+                res.status(200).json({ message: 'Delete Successful' });
+                return;
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
     }
 }

@@ -24,8 +24,12 @@ export class UserServiceImpl implements UserService {
             return user;
         }
 
-        async deleteUser(id: number): Promise<void> {
-            return;
+        async deleteUser(username: string): Promise<void> {
+            await User.destroy({
+                where: {
+                    username: username
+                }
+            })
         }
 
         async getUserByUsername(username: string): Promise<User | null> {

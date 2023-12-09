@@ -40,8 +40,15 @@
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
-                        <input type="password" id="password" class="form-control" v-model="formData.password" required/>
+                        <input v-if="showPassword" type="text" id="password" class="form-control" v-model="formData.password" required/>
+                        <input v-else type="password" id="password" class="form-control" v-model="formData.password" required/>
                         <label class="form-label" for="password">Password</label>
+
+                        <div class="d-flex col gap-2">
+                          <input type="checkbox" id="showPassword" v-model="showPassword" />
+                          <div v-if="showPassword">Hide Password</div>
+                          <div v-else>Show Password</div>
+                        </div>
                       </div>
                     </div>
 
@@ -76,6 +83,7 @@
 <script>
 import {User} from "@/models/user";
 import {loginUser} from "@/api/userApi";
+import {mapMutations} from "vuex";
 
 export default {
   data() {
@@ -88,9 +96,12 @@ export default {
       done : false,
       loginSuccess : false,
       message : '',
+      showPassword: false,
     };
   },
   methods: {
+    ...mapMutations(['setToken', 'setLogged']),
+
     async login() {
       // Handle login logic using this.formData
       if ((this.formData.username === '') || (this.formData.password === '')) {
@@ -99,20 +110,26 @@ export default {
         this.filled = true;
         const user = new User(this.formData.username, this.formData.password);
 
-        const apiResponse = await loginUser(user);
+        loginUser(user).then((response) => {
+          if (response.ok) {
 
-        if (apiResponse.ok) {
-          this.done = true;
-          this.message = 'Login successful';
-          this.loginSuccess = true;
-          setTimeout(() => {
-            this.$router.push('/');
-          }, 3000);
-        } else {
-          this.done = true;
-          this.loginSuccess = false;
-          this.message = apiResponse.message;
-        }
+            console.log("token is: ", response.data);
+            this.setToken({token: response.data});
+            this.setLogged({logged: true});
+            this.done = true;
+            this.message = 'Login successful';
+            this.loginSuccess = true;
+            setTimeout(() => {
+              this.$router.push('/');
+            }, 3000);
+          } else {
+            this.done = true;
+            this.loginSuccess = false;
+            this.message = response.message;
+          }
+        });
+
+
       }
     },
   },

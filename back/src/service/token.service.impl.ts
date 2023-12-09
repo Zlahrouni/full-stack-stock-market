@@ -11,7 +11,8 @@ export class TokenServiceImpl implements TokenService {
             }
         ).then(token => {
             return token != null;
-        });
+            //return token.expiration.getTime() > Date.now();
+        })
 
     }
 
@@ -35,7 +36,7 @@ export class TokenServiceImpl implements TokenService {
                     token: token
                 }
             }
-        )
+        );
     }
 
     setToken(token: string, value: String): void {

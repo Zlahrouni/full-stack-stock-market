@@ -1,5 +1,6 @@
 <script>
 import { CompanyDTO } from "@/models/companyDTO";
+import {mapGetters} from "vuex";
 
 export default {
   props: {
@@ -32,6 +33,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(['isLogged']),
     priceChange() {
       return this.company.stockQuote.c - this.company.stockQuote.pc;
     },
@@ -45,18 +47,23 @@ export default {
     <div class="card-body" >
 
       <div class="card-title">
-        <h3>{{ company.name }} </h3>
+        <h3>
+          <span :class="{ 'text-success': priceChange > 0, 'text-danger': priceChange < 0 }">
+        <i :class="{ 'bi bi-arrow-up-right': priceChange > 0, 'bi bi-arrow-down-right': priceChange < 0 }"></i>
+      </span>
+          {{ company.name }}
+        </h3>
         <img
           v-if="company.website && imageExists"
           :src="`https://logo.clearbit.com/${company.website}`"
           alt="{{company.name}} Logo"
         />
+
       </div>
       <p>({{ company.symbol }})</p>
       <p>Stock Price: {{ company.stockQuote.c }} $</p>
-      <span :class="{ 'text-success': priceChange > 0, 'text-danger': priceChange < 0 }">
-        <i :class="{ 'bi bi-arrow-up': priceChange > 0, 'bi bi-arrow-down': priceChange < 0 }"></i>
-      </span>
+
+      <a v-if="isLogged" href="#" class="btn btn-success">Add to favorite</a>
     </div>
     </router-link>
   </div>

@@ -17,8 +17,8 @@ export class UserController {
         return this.UserService.updateUser(user);
     }
 
-    deleteUser(id: number) {
-        return this.UserService.deleteUser(id);
+    deleteUser(username: string) {
+        return this.UserService.deleteUser(username);
     }
 
     async getUserByUsername(username: string) {

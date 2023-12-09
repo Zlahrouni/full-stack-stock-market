@@ -4,10 +4,10 @@ import {ref, onMounted} from 'vue';
 import type {CompanyDTO} from "@/models/companyDTO";
 import {getAllCompanies} from "@/api/companyApi";
 import CompanyCard from "@/components/CompanyCard.vue";
-import {getCookie} from "@/utils/coockies.utils";
 
 let companies = ref([] as CompanyDTO[]);
 const loading = ref(true);
+
 
 onMounted(async () => {
   try {
@@ -19,7 +19,6 @@ onMounted(async () => {
 
   }
 
-  const token = getCookie('token');
 
 });
 
@@ -51,10 +50,6 @@ const amount = ref(0);
 
 
 <style scoped>
-.card:hover {
-  background-color: #e0e0e0; /* Change the background color when hovering */
-}
-
 .loading-container {
   position: fixed;
   top: 0;
