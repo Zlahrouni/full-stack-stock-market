@@ -1,4 +1,4 @@
-import {CompanyDTO} from "../model/companyDTO";
+import {CompanyDTO} from "../model/DTO/companyDTO";
 
 export interface CompanyService {
     getAllCompanies(): Promise<CompanyDTO[]>;

@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {RouterView } from 'vue-router'
+import {getCookie} from "@/utils/coockies.utils";
+import {checkToken} from "@/api/userApi";
+import {onMounted, ref} from "vue";
+import Navbar from "@/components/Navbar.vue";
 
+
+const isAuthenticated = ref(false);
+const username = ref('');
+
+onMounted(async () => {
+  const token = getCookie('token');
+  if (token) {
+    const apiResponse = await checkToken(token);
+    if (apiResponse.ok) {
+      isAuthenticated.value = true;
+      username.value = apiResponse.data ?? '';
+      console.log("username", username.value);
+    }
+  }
+});
+
+//https://www.youtube.com/watch?v=P3PW-PbG-ns
 </script>
 
 <template>
   <div>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a class="navbar-brand" href="/">
-            <img src="/st.png" height="30" width="30" class="d-inline-block align-top mr-3" alt=""> Stock Hub
-          </a>
-          <div class="collapse navbar-collapse justify-content-between">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active"><RouterLink to="/" class="nav-item nav-link">Home</RouterLink></li>
-
-
-              <li class="nav-item"><RouterLink to="/about" class="nav-item nav-link">About</RouterLink></li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-
-              <li class="nav-item"> <RouterLink to="/signup" class="nav-item nav-link"><span class="glyphicon glyphicon-user"></span> Sign Up</RouterLink></li>
-              <li class="nav-item"> <RouterLink to="/login" class="nav-item nav-link"><span class="glyphicon glyphicon-user"></span> Log In</RouterLink></li>
-
-            </ul>
-          </div>
-        </div>
-      </nav>
-
+      <Navbar></Navbar>
     </header>
 
     <RouterView />
