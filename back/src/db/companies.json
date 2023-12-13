@@ -1,7 +1,7 @@
 [
   { "name": "Apple Inc.", "symbol": "AAPL" },
   { "name": "Amazon.com Inc.", "symbol": "AMZN" },
-  { "name": "Facebook Inc.", "symbol": "FB" },
+  { "name": "Facebook Inc.", "symbol": "META" },
   { "name": "Alphabet Inc.", "symbol": "GOOGL" },
   { "name": "Microsoft Corporation", "symbol": "MSFT" },
   { "name": "Netflix Inc.", "symbol": "NFLX" },

@@ -1,8 +1,19 @@
 import {createStore} from "vuex";
 import {checkToken} from "@/api/userApi";
-
+import VuexPersistence from "vuex-persist";
+// export interface RootState {
+//     token: string;
+//     isLogged: boolean;
+//     username: string;
+// }
+//
+// const vuexLocal = new VuexPersistence({
+//     storage: window.localStorage,
+//     asyncStorage: true
+// })
 
 const store = createStore({
+    plugins: [new VuexPersistence().plugin],
     state: {
         token: '',
         isLogged: false,
@@ -47,6 +58,7 @@ const store = createStore({
             context.commit('setToken', {token: ''});
             context.commit('setLogged', {logged: false});
             context.commit('setUsername', {username: ''});
+            localStorage.clear();
         }
     },
     modules: {

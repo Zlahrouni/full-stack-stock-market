@@ -11,15 +11,19 @@ const loading = ref(true);
 
 onMounted(async () => {
   try {
-    companies.value = await getAllCompanies();
+    const apiResponse = await getAllCompanies();
+    if(apiResponse.ok) {
+      if(apiResponse.data != undefined) {
+        companies.value = apiResponse.data;
+      }
+    }
+    console.log("compfav", companies.value[0].favorite)
     loading.value = false;
   } catch (error) {
     console.error('Error:', error);
     loading.value = false;
 
   }
-
-
 });
 
 
@@ -41,6 +45,7 @@ const amount = ref(0);
           v-for="com in companies"
           :key="com.symbol"
           :company="com"
+          :isFav="com.favorite"
       />
     </div>
   </div>

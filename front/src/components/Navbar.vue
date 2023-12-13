@@ -84,6 +84,7 @@ export default {
                 {{ getUsername}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <router-link :to="`/favorites`" class="dropdown-item">My favorite</router-link>
                 <div class="dropdown-item" @click="logout" href="#">Log out</div>
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item delete-account" @click="deleteAccount" href="#">Delete Account</div>

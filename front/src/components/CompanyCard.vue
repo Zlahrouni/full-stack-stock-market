@@ -1,10 +1,13 @@
 <script>
 import { CompanyDTO } from "@/models/companyDTO";
 import {mapGetters} from "vuex";
+import {toast} from "vue3-toastify";
+import {addOrRemoveFavorite} from "@/api/favoriteApi";
 
 export default {
   props: {
     company: CompanyDTO,
+    isFav: Boolean,
   },
   data() {
     return {
@@ -31,6 +34,18 @@ export default {
         return false;
       }
     },
+    async favoriteaction() {
+      const apiResponse = await addOrRemoveFavorite(this.company.symbol, this.company.favorite);
+      if (apiResponse.ok) {
+        console.log("message for api", apiResponse.message)
+        toast(apiResponse.message, {type: "success"});
+        this.company.favorite = !this.company.favorite;
+
+      } else {
+        console.log("error for api", apiResponse.message)
+        toast("Error: " + apiResponse.message, {type: "error"});
+      }
+    }
   },
   computed: {
     ...mapGetters(['isLogged']),
@@ -39,13 +54,13 @@ export default {
     },
   },
 };
+
 </script>
 
 <template>
   <div class="card w-25">
-    <router-link :to="`/company/${company.symbol}`">
-    <div class="card-body" >
 
+    <div class="card-body" >
       <div class="card-title">
         <h3>
           <span :class="{ 'text-success': priceChange > 0, 'text-danger': priceChange < 0 }">
@@ -62,10 +77,18 @@ export default {
       </div>
       <p>({{ company.symbol }})</p>
       <p>Stock Price: {{ company.stockQuote.c }} $</p>
+      <div class="d-flex row gap-3">
+        <router-link class="btn btn-info" :to="`/company/${company.symbol}`">More details</router-link>
 
-      <a v-if="isLogged" href="#" class="btn btn-success">Add to favorite</a>
+        <div v-if="isLogged">
+          <div @click="favoriteaction" :class="{'btn btn-danger w-100': company.favorite, 'btn btn-success w-100': !company.favorite}">
+            {{company.favorite ? "Remove from favorite" : "Add to favorite"}}
+          </div>
+        </div>
+      </div>
+
+
     </div>
-    </router-link>
   </div>
 </template>
 

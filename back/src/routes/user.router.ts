@@ -1,7 +1,10 @@
 import {UserController} from "../controller/user.controller";
 import {Router} from "express";
-import * as jwt from 'jsonwebtoken';
 import {TokenServiceImpl} from "../service/token.service.impl";
+import {authentificate} from "../utils/guard.js";
+import {HttpCodes, HttpConstants} from "../utils/constants/httpConstants";
+import {errorHandler} from "../utils/errorHandler";
+
 export class UserRouter {
     router = Router();
     tokenService = new TokenServiceImpl();
@@ -15,24 +18,18 @@ export class UserRouter {
         this.router.post('/signup', async (req, res) => {
             try {
                 console.log("Serving request for /signup")
-                // Check if username and password are valid
-                if (req.body.username == null || req.body.password == null) {
-                    res.status(400).send('Bad Request');
-                    return;
-                }
-                // Check if username already exists
-                const user = await this.userController.getUserByUsername(req.body.username);
-                if(user != null)  {
-                    res.status(400).send('Username already exists');
-                    return;
-                }
                 // Add user to database
-                const newUser = await this.userController.addUser(req.body);
+                await this.userController.addUser(req.body.username, req.body.password);
 
-                res.status(200).send(newUser);
+                res.status(HttpCodes.CREATED).json({ message: 'User created successfully' });
             } catch (error) {
-                console.error(error);
-                res.status(500).send('Internal Server Error');
+                if(error instanceof Error) {
+                    if (Object.values(HttpConstants).includes(error.message as HttpConstants)) {
+                        res.status(errorHandler(error.message as HttpConstants)).json({error: error.message});
+                        return;
+                    }
+                    res.status(500).send('internal server error');
+                }
             }
         });
 
@@ -40,42 +37,19 @@ export class UserRouter {
         this.router.post('/login', async (req, res) => {
             try {
                 console.log("Serving request for /login")
-                // Check if username and password are valid
-                if (req.body.username == null || req.body.password == null) {
-                    res.status(400).json({ error: 'Bad Request' });
-                    return;
-                }
-                // Check if username already exists
-                const user = await this.userController.getUserByUsername(req.body.username);
-                if(user == null)  {
-                    res.status(400).json({ error: 'Username does not exist' });
-                    return;
-                }
-                // Check if password is valid
-                const valid = await this.userController.checkPassword(req.body.password, user.password);
-                console.log("password valid: " + valid);
-                if(!valid) {
-                    res.status(400).json({ error: 'Invalid password' });
+                const token = await this.userController.login(req.body.username, req.body.password);
 
-                    return;
-                }
-                // Create JWT
-
-                const secretKey = 'your-secret-key';
-                const uniqueIdentifier = Date.now();
-
-                const tokenPayload = {
-                    username: user.username,
-                    uniqueIdentifier: uniqueIdentifier,
-                };
-                const token = jwt.sign(tokenPayload, secretKey);
-                this.tokenService.setToken(token, user.username);
-                console.log("token: " + token);
                 res.status(200).json({ token });
 
             } catch (error) {
-                console.error(error);
-                res.status(500).json({ error: 'Internal Server Error' });
+                if(error instanceof Error) {
+                    if (Object.values(HttpConstants).includes(error.message as HttpConstants)) {
+                        res.status(errorHandler(error.message as HttpConstants)).json({error: error.message});
+                        return;
+                    }
+
+                    res.status(500).send('internal server error');
+                }
             }
         });
 
@@ -120,13 +94,8 @@ export class UserRouter {
 
                 // Split the Authorization header to get the token without "Bearer "
                 const [, token] = authorizationHeader.split(' ');
-                // Check if token is valid
-                const valid = await this.tokenService.checkToken(token);
-                console.log("token valid: " + valid);
-                if(!valid) {
-                    res.status(400).json({ error: 'Invalid token' });
-                    return;
-                }
+
+                await authentificate(token);
 
                 // Delete token
                 this.tokenService.removeToken(token);
@@ -139,10 +108,9 @@ export class UserRouter {
             }
         });
 
-        this.router.get('/delete', async (req, res) => {
+        this.router.post('/delete', async (req, res) => {
             try {
 
-                console.log("Serving request for /delete")
                 const authorizationHeader = req.headers.authorization;
 
                 // Check if the Authorization header exists
@@ -153,31 +121,25 @@ export class UserRouter {
 
                 // Split the Authorization header to get the token without "Bearer "
                 const [, token] = authorizationHeader.split(' ');
-                // Check if token is valid
-                const valid = await this.tokenService.checkToken(token);
-                console.log("token valid: " + valid);
-                if(!valid) {
-                    res.status(400).json({ error: 'Invalid token' });
-                    return;
-                }
-                const username = await this.tokenService.getUserName(token);
 
-                if(username == null) {
-                    res.status(400).json({ error: 'Invalid token' });
-                    return;
-                }
-                // Delete token
-                this.tokenService.removeToken(token);
+                await authentificate(token);
 
-                // Delete user
-                await this.userController.deleteUser(username);
+                await this.userController.deleteUser(req.body.username);
+
                 res.status(200).json({ message: 'Delete Successful' });
                 return;
             } catch (error) {
-                console.error(error);
-                res.status(500).json({ error: 'Internal Server Error' });
+                if(error instanceof Error) {
+                    if (Object.values(HttpConstants).includes(error.message as HttpConstants)) {
+                        res.status(errorHandler(error.message as HttpConstants)).json({error: error.message});
+                        return;
+                    }
+
+                    res.status(500).json({error: 'internal server error'});
+                }
             }
         });
+
 
     }
 }
