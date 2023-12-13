@@ -14,16 +14,6 @@ export class CompanyRouter {
     }
 
     private configureRoutes(): void {
-        /**
-          This endpoint handles GET requests to /get, retrieving a list of companies
-          along with its stock quote.
-          If the user is authenticated, it returns the list of companies along with
-          additional information:
-          - Whether each company is in the user's favorites list.
-
-          Specific errors are handled and mapped to appropriate HTTP responses
-          using the HttpConstants enum.
-        */
         this.router.get('/get', async (req, res) => {
             try {
                 console.log("Serving request for /getall")
