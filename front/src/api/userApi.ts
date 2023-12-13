@@ -1,8 +1,6 @@
 import {User} from "@/models/user";
 import {ApiResponse} from "@/models/types/ApiReponse";
-import {deleteCookie, getCookie, setCookie} from "@/utils/coockies.utils";
 import store from "@/store";
-
 
 export async function addUser(user: User): Promise<ApiResponse<User>> {
     try {
@@ -13,13 +11,11 @@ export async function addUser(user: User): Promise<ApiResponse<User>> {
             },
             body: JSON.stringify(user),
         });
-        console.log("response"+  response);
         if (response.ok) {
             const userData = await response.json();
             return new ApiResponse<User>(response.ok, userData);
         } else {
             const errorMessage = await response.text();
-            console.log("userdata "+  errorMessage);
             return new ApiResponse<User>(response.ok, undefined, errorMessage);
         }
     } catch (error) {
@@ -43,19 +39,15 @@ export async function loginUser(user: User): Promise<ApiResponse<string>> {
             const token = responseData.token;
 
             // Handle the token here and store it securely
-            // Example: storeToken(token);
-          //  console.log("token"+  token);
-            setCookie("token", token);
+            //setCookie("token", token);
 
             return new ApiResponse<string>(true, token);
         } else {
             const errorData = await response.json();
             const errorMessage = errorData.error; // Adjust the property based on your API response
-            console.log("Error message:", errorMessage);
             return new ApiResponse<string>(false, undefined, errorMessage);
         }
     } catch (error) {
-        console.error('Error:', error);
         return new ApiResponse<string>(false, undefined, 'An unexpected error occurred.');
     }
 }
@@ -69,13 +61,11 @@ export async function checkToken(token: String) {
             },
             body: JSON.stringify({token: token}),
         });
-        console.log("response"+  response);
         if (response.ok) {
             const userData = await response.json();
             return new ApiResponse<String>(response.ok, userData.username);
         } else {
             const errorMessage = await response.json();
-            console.log("userdata "+  errorMessage);
             return new ApiResponse<String>(response.ok, undefined, errorMessage);
         }
     } catch (error) {
@@ -85,9 +75,8 @@ export async function checkToken(token: String) {
 }
 
 export async function logoutUser() {
-    console.log("logout started")
     try {
-        let token = getCookie("token");
+        let token = store.getters.getToken;
         if(typeof token !== 'undefined') {
             const response = await fetch(`http://localhost:3000/api/user/logout`, {
                 method: 'GET',
@@ -96,18 +85,13 @@ export async function logoutUser() {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log("response" + response);
             if (response.ok) {
-                console.log("logout successful")
                 await store.dispatch('clear');
                 return true;
             } else {
-                console.log("logout failed")
-                deleteCookie("token");
                 return false;
             }
         } else {
-            console.log("No token found - clearing store")
             await store.dispatch('clear');
             return true;
         }
@@ -119,29 +103,25 @@ export async function logoutUser() {
 }
 
 export async function deleteUser() {
-    console.log("delete started")
     try {
-        let token = getCookie("token");
+        let token = store.getters.getToken;
+        let username = store.getters.getUsername;
         if(typeof token !== 'undefined') {
             const response = await fetch(`http://localhost:3000/api/user/delete`, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({username: username}),
             });
-            console.log("response" + response);
             if (response.ok) {
-                console.log("delete successful")
                 await store.dispatch('clear');
                 return true;
             } else {
-                console.log("delete failed")
-                deleteCookie("token");
                 return false;
             }
         } else {
-            console.log("No token found - clearing store")
             await store.dispatch('clear');
             return true;
         }
@@ -151,3 +131,4 @@ export async function deleteUser() {
         return true;
     }
 }
+

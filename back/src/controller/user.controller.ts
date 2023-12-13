@@ -1,23 +1,29 @@
 import { User } from "../model/user.model";
 import {UserService} from "../service/user.service";
+import {HttpConstants} from "../utils/constants/httpConstants";
+import {UserServiceImpl} from "../service/user.service.impl";
 
 export class UserController {
-    constructor(private UserService: UserService) {
-    }
+    userService = new UserServiceImpl();
 
-    getAllUsers() {
-        return this.UserService.getAllUsers();
+    constructor(private UserService: UserService) {
     }
 
     addUser(user: User) {
         return this.UserService.addUser(user);
     }
 
-    updateUser(user : User) {
-        return this.UserService.updateUser(user);
-    }
 
-    deleteUser(username: string) {
+    async deleteUser(username: string) {
+        if(username == null || username.length === 0) {
+            throw new Error(HttpConstants.PARAMREQUIRED);
+        }
+
+        const userExists = await this.userService.checkIfUserExists(username);
+        if(!userExists) {
+            throw new Error(HttpConstants.USERNAMENOTFOUND);
+        }
+
         return this.UserService.deleteUser(username);
     }
 

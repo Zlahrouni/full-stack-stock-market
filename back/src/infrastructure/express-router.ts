@@ -5,6 +5,9 @@ import {CompanyService} from "../service/company.service";
 import {UserController} from "../controller/user.controller";
 import {UserRouter} from "../routes/user.router";
 import {UserService} from "../service/user.service";
+import {FavoriteController} from "../controller/favorite.controller";
+import {FavoriteRouter} from "../routes/favorite.router";
+import {FavoriteService} from "../service/favorite.service";
 
 
 export class ExpressRouter {
@@ -16,7 +19,10 @@ export class ExpressRouter {
     private userController!: UserController;
     private userRouter!: UserRouter;
 
-    constructor(private companyService: CompanyService, private userService: UserService) {
+    private favoriteController!: FavoriteController;
+    private favoriteRouter!: FavoriteRouter;
+
+    constructor(private companyService: CompanyService, private userService: UserService, private favoriteSerivce: FavoriteService ) {
         this.configureControllers();
         this.configureRouters();
         this.configureRoutes();
@@ -25,15 +31,18 @@ export class ExpressRouter {
     private configureControllers(): void {
         this.companyController = new CompanyController(this.companyService);
         this.userController = new UserController(this.userService);
+        this.favoriteController = new FavoriteController(this.favoriteSerivce);
     }
 
     private configureRouters(): void {
         this.companyRouter = new CompanyRouter(this.companyController);
         this.userRouter = new UserRouter(this.userController);
+        this.favoriteRouter = new FavoriteRouter(this.favoriteController);
     }
 
     private configureRoutes(): void {
         this.router.use('/company', this.companyRouter.router);
         this.router.use('/user', this.userRouter.router);
+        this.router.use('/favorite', this.favoriteRouter.router);
     }
 }

@@ -2,6 +2,10 @@ import {UserController} from "../controller/user.controller";
 import {Router} from "express";
 import * as jwt from 'jsonwebtoken';
 import {TokenServiceImpl} from "../service/token.service.impl";
+import {authentificate} from "../utils/guard.js";
+import {HttpConstants} from "../utils/constants/httpConstants";
+import {errorHandler} from "../utils/errorHandler";
+
 export class UserRouter {
     router = Router();
     tokenService = new TokenServiceImpl();
@@ -120,13 +124,8 @@ export class UserRouter {
 
                 // Split the Authorization header to get the token without "Bearer "
                 const [, token] = authorizationHeader.split(' ');
-                // Check if token is valid
-                const valid = await this.tokenService.checkToken(token);
-                console.log("token valid: " + valid);
-                if(!valid) {
-                    res.status(400).json({ error: 'Invalid token' });
-                    return;
-                }
+
+                await authentificate(token);
 
                 // Delete token
                 this.tokenService.removeToken(token);
@@ -139,10 +138,9 @@ export class UserRouter {
             }
         });
 
-        this.router.get('/delete', async (req, res) => {
+        this.router.post('/delete', async (req, res) => {
             try {
 
-                console.log("Serving request for /delete")
                 const authorizationHeader = req.headers.authorization;
 
                 // Check if the Authorization header exists
@@ -153,31 +151,25 @@ export class UserRouter {
 
                 // Split the Authorization header to get the token without "Bearer "
                 const [, token] = authorizationHeader.split(' ');
-                // Check if token is valid
-                const valid = await this.tokenService.checkToken(token);
-                console.log("token valid: " + valid);
-                if(!valid) {
-                    res.status(400).json({ error: 'Invalid token' });
-                    return;
-                }
-                const username = await this.tokenService.getUserName(token);
 
-                if(username == null) {
-                    res.status(400).json({ error: 'Invalid token' });
-                    return;
-                }
-                // Delete token
-                this.tokenService.removeToken(token);
+                await authentificate(token);
 
-                // Delete user
-                await this.userController.deleteUser(username);
+                await this.userController.deleteUser(req.body.username);
+
                 res.status(200).json({ message: 'Delete Successful' });
                 return;
             } catch (error) {
-                console.error(error);
-                res.status(500).json({ error: 'Internal Server Error' });
+                if(error instanceof Error) {
+                    if (Object.values(HttpConstants).includes(error.message as HttpConstants)) {
+                        res.status(errorHandler(error.message as HttpConstants)).json({error: error.message});
+                        return;
+                    }
+
+                    res.status(500).json({error: 'internal server error'});
+                }
             }
         });
+
 
     }
 }

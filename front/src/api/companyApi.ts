@@ -1,33 +1,50 @@
-import axios from "axios";
 import type {CompanyDTO} from "@/models/companyDTO";
 import {ApiResponse} from "@/models/types/ApiReponse";
-import {User} from "@/models/user";
+import store from "@/store";
 
-export async function getAllCompanies(): Promise<CompanyDTO[]> {
+export async function getAllCompanies(): Promise<ApiResponse<CompanyDTO[]>> {
     try {
-
-        const response = await axios.get(`http://localhost:3000/api/company/getall`);
-
-        return response.data;
+        let token = store.getters.getToken;
+        const response = await fetch('http://localhost:3000/api/company/get', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        if(response.ok) {
+            const data = await response.json();
+            console.log("13122023 - data : "+  data);
+            return new ApiResponse<CompanyDTO[]>(true, data);
+        }
+        else {
+            const data = await response.json();
+            return new ApiResponse<CompanyDTO[]>(false, undefined, data.error);
+        }
         // Process the stock quote data here
     } catch (error) {
-        console.error('Error:', error);
-        return [];
+        return new ApiResponse<CompanyDTO[]>(false, undefined, 'Unexpected error');
     }
 }
 
 export async function getCompanyBySymbol(symbol: string): Promise<ApiResponse<CompanyDTO>> {
     try {
 
-        const response = await axios.get(`http://localhost:3000/api/company/get/${symbol}`);
+        let token = store.getters.getToken;
+        const response = await fetch(`http://localhost:3000/api/company/get/${symbol}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
-        console.log("response getCompanyBySymbol : "+  response);
-        if(response.status == 200) {
-            console.log("response.data"+  response.data)
-            return new ApiResponse<CompanyDTO>(true, response.data);
+        if(response.ok) {
+            const data = await response.json();
+            return new ApiResponse<CompanyDTO>(true, data, 'Company found');
         } else {
-            console.log("Error companysymb:"+  response.data);
-            return new ApiResponse<CompanyDTO>(false, undefined, response.data);
+            const data = await response.json();
+            return new ApiResponse<CompanyDTO>(false, undefined, data.error);
         }
 
         // Process the stock quote data here

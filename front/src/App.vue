@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import {RouterView } from 'vue-router'
-import {getCookie} from "@/utils/coockies.utils";
 import {checkToken} from "@/api/userApi";
 import {onMounted, ref} from "vue";
 import Navbar from "@/components/Navbar.vue";
+import store from "@/store";
 
 
 const isAuthenticated = ref(false);
 const username = ref('');
 
 onMounted(async () => {
-  const token = getCookie('token');
+  const token = store.getters.getToken;
   if (token) {
     const apiResponse = await checkToken(token);
     if (apiResponse.ok) {

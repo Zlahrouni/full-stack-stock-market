@@ -8,6 +8,8 @@ import {UserService} from "../service/user.service";
 import {UserServiceImpl} from "../service/user.service.impl";
 import {sequelize} from "../db/sequelize.config";
 import {Company} from "../model/company.model";
+import {FavoriteService} from "../service/favorite.service";
+import {FavoriteServiceImpl} from "../service/favorite.service.impl";
 
 export class ExpressApplication {
     private expressRouter!: ExpressRouter;
@@ -15,6 +17,7 @@ export class ExpressApplication {
     private server!: ExpressServer;
     private companyService!: CompanyService;
     private userService!: UserService;
+    private favoriteService!: FavoriteService;
 
     constructor() {
         this.configureApplication();
@@ -46,10 +49,14 @@ export class ExpressApplication {
     private configureServices(): void {
         this.companyService = new CompanyServiceImpl();
         this.userService = new UserServiceImpl();
+        this.favoriteService = new FavoriteServiceImpl();
     }
 
     private configureExpressRouter(): void {
-        this.expressRouter = new ExpressRouter(this.companyService, this.userService);
+        this.expressRouter = new ExpressRouter(this.companyService, this.userService,
+
+
+            this.favoriteService);
     }
 
     private configureServer(): void {
@@ -79,7 +86,7 @@ export class ExpressApplication {
             const defaultCompaniesData = [
                 { name: "Apple Inc.", symbol: "AAPL", website: "https://www.apple.com/" },
                 { name: "Amazon.com Inc.", symbol: "AMZN", website: "https://www.amazon.com/" },
-                { name: "Facebook Inc.", symbol: "FB", website: "https://www.facebook.com/" },
+                { name: "Meta Inc.", symbol: "META", website: "https://about.meta.com/" },
                 { name: "Alphabet Inc.", symbol: "GOOGL", website: "https://abc.xyz/" },
                 { name: "Microsoft Corporation", symbol: "MSFT", website: "https://www.microsoft.com/" },
                 { name: "Netflix Inc.", symbol: "NFLX", website: "https://www.netflix.com/" },

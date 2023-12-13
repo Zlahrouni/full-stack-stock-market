@@ -2,14 +2,13 @@ import {CompanyService} from "./company.service";
 
 import {CompanyDTO} from "../model/DTO/companyDTO";
 import {getStockQuote} from "./extern/finnhub";
-import {CompaniesRepository} from "../db/Repository/companies.repository";
 import {Company} from "../model/company.model";
-import {where} from "sequelize";
+import {Favorite} from "../model/favorite.model";
 
 export class CompanyServiceImpl implements CompanyService {
 
 
-    async getAllCompanies(): Promise<CompanyDTO[]> {
+    async getAllCompanies(username: string | null = null): Promise<CompanyDTO[]> {
         const companies: Company[] = await Company.findAll(); // Read your companies from JSON
         const companiesDTO: CompanyDTO[] = [];
         console.log("companies :");
@@ -25,6 +24,17 @@ export class CompanyServiceImpl implements CompanyService {
                 companyDTO.stockQuote = stockQuote;
                 companyDTO.website = company.website;
 
+                if(username != null) {
+                    await Favorite.findOne({
+                        where: {
+                            username: username,
+                            symbol: company.symbol
+                        }
+                    }).then((favorite) => {
+                        companyDTO.favorite = favorite != null;
+                    });
+                }
+
                 companiesDTO.push(companyDTO);
             } catch (error) {
                 // Handle any errors, e.g., log the error
@@ -38,7 +48,7 @@ export class CompanyServiceImpl implements CompanyService {
         // Now, the companiesDTO array contains the stock quotes
         return companiesDTO;
     }
-    async getCompanyBySymbol(symbol: string): Promise<CompanyDTO | null>  {
+    async getCompanyBySymbol(symbol: string, username: string | null = null): Promise<CompanyDTO | null>  {
         const company: Company | null = await Company.findBySymbol(symbol);
 
         const companyDTO: CompanyDTO = {} as CompanyDTO;
@@ -51,9 +61,29 @@ export class CompanyServiceImpl implements CompanyService {
             companyDTO.stockQuote = stockQuote;
             companyDTO.website = company.website;
 
+            if(username != null) {
+                await Favorite.findOne({
+                    where: {
+                        username: username,
+                        symbol: company.symbol
+                    }
+                }).then((favorite) => {
+                    companyDTO.favorite = favorite != null;
+                });
+            }
             return companyDTO;
         }
         return null;
+    }
+
+    async checkIfCompanyExists(symbol: string): Promise<boolean> {
+        const company = await Company.findOne({
+            where: {
+                symbol: symbol
+            }
+        });
+        console.log("company :" + company);
+        return company != null;
     }
 
 }

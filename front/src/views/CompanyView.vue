@@ -1,7 +1,8 @@
 <script>
 import { getCompanyBySymbol } from "@/api/companyApi";
-import {ApiResponse} from "@/models/types/ApiReponse";
-import {CompanyDTO} from "@/models/companyDTO";
+import {addOrRemoveFavorite} from "@/api/favoriteApi";
+import {toast} from "vue3-toastify";
+import {mapGetters} from "vuex";
 
 export default {
   name: 'CompanyView',
@@ -9,24 +10,45 @@ export default {
     return {
       symbol: null,
       apiResponse : null,
+      company: null,
     };
   },
   async mounted() {
     // Access the symbol parameter from the route
     this.symbol = this.$route.params.symbol;
-
     try {
       // Perform asynchronous operation (e.g., fetching data)
       this.apiResponse = await getCompanyBySymbol(this.symbol.toUpperCase());
       if(this.apiResponse.ok === true) {
         this.company = this.apiResponse.data;
-        console.log('Successfully fetched company data:', this.apiResponse.data);
+        console.log('13122023 - Successfully fetched company data:', this.apiResponse.data);
+        console.log('13122023 - is it favorite?', this.company.favorite);
       } else {
         console.error('Error fetching company data:', this.apiResponse.message);
       }
     } catch (error) {
       console.error('Error fetching company data:', error);
     }
+  },
+  methods: {
+    async favoriteaction() {
+      const apiResponse = await addOrRemoveFavorite(this.company.symbol, this.company.favorite);
+      if (apiResponse.ok) {
+        console.log("message for api", apiResponse.message)
+        toast(apiResponse.message, {type: "success"});
+        this.company.favorite = !this.company.favorite;
+
+      } else {
+        console.log("error for api", apiResponse.message)
+        toast("Error: " + apiResponse.message, {type: "error"});
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(['isLogged']),
+    priceChange() {
+      return this.company.stockQuote.c - this.company.stockQuote.pc;
+    },
   },
 };
 </script>
@@ -43,6 +65,12 @@ export default {
             <div class="card-body">
               <h5 class="card-title">Company Name: {{ company.name }}</h5>
               <p class="card-text">Symbol: {{ company.symbol }}</p>
+
+              <div v-if="isLogged">
+                <div @click="favoriteaction" :class="{'btn btn-danger w-100': company.favorite, 'btn btn-success w-100': !company.favorite}">
+                  {{company.favorite ? "Remove from favorite" : "Add to favorite"}}
+                </div>
+              </div>
             </div>
           </div>
 

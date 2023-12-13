@@ -19,7 +19,7 @@ export async function getStockQuote(symbol: string): Promise<StockQuoteResponse>
     } catch (error) {
         console.error('Error:', error);
         return {
-            c: 0, // You can provide default values here
+            c: 0,
             pc: 0,
             h: 0,
             l: 0,
