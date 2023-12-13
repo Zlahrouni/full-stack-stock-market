@@ -24,7 +24,7 @@ Welcome to the StockHub, a web application that provides real-time data about th
 
 ### User Routes
 
-For detailed documentation on available routes and functionalities, refer to the `routesDocs` file.
+For detailed documentation on available routes and functionalities, refer to the `routesDocs` file in the `back` folder.
 
 ## Project Structure
 
