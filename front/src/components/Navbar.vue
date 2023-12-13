@@ -23,14 +23,15 @@ export default {
         if(loggedOut) {
           toast("Logged out successfully", {
             autoClose: 3000,
-            position: "top-right",
             type: "success",
+            position: "bottom-right"
+
           });
         } else {
           toast("Error logging out", {
             autoClose: 3000,
-            position: "top-right",
             type: "error",
+            position: "bottom-right"
           });
         }
       });
@@ -41,14 +42,14 @@ export default {
         if(deleted) {
           toast("Account deleted successfully", {
             autoClose: 3000,
-            position: "top-right",
             type: "success",
+            position: "bottom-right"
           });
         } else {
           toast("Error deleting account", {
             autoClose: 3000,
-            position: "top-right",
             type: "error",
+            position: "bottom-right"
           });
         }
       });

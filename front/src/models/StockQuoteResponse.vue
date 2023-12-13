@@ -14,5 +14,4 @@ export type StockQuoteResponse = {
 </script>
 
 <style scoped>
-/* Your CSS styling here */
 </style>

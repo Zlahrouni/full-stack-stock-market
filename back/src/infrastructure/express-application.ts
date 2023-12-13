@@ -100,14 +100,6 @@ export class ExpressApplication {
                 { name: "QUALCOMM Incorporated", symbol: "QCOM", website: "https://www.qualcomm.com/" },
                 { name: "Adobe Inc.", symbol: "ADBE", website: "https://www.adobe.com/" },
                 { name: "Cisco Systems Inc.", symbol: "CSCO", website: "https://www.cisco.com/" },
-                { name: "Comcast Corporation", symbol: "CMCSA", website: "https://corporate.comcast.com/" },
-                { name: "Costco Wholesale Corporation", symbol: "COST", website: "https://www.costco.com/" },
-                { name: "eBay Inc.", symbol: "EBAY", website: "https://www.ebay.com/" },
-                { name: "PepsiCo Inc.", symbol: "PEP", website: "https://www.pepsico.com/" },
-                { name: "Starbucks Corporation", symbol: "SBUX", website: "https://www.starbucks.com/" },
-                { name: "The Walt Disney Company", symbol: "DIS", website: "https://www.thewaltdisneycompany.com/" },
-                { name: "Verizon Communications Inc.", symbol: "VZ", website: "https://www.verizon.com/" },
-                { name: "Walmart Inc.", symbol: "WMT", website: "https://www.walmart.com/" }
             ];
 
             await Company.bulkCreate(defaultCompaniesData);

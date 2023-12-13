@@ -10,7 +10,7 @@
 
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
 
-                  <form class="mx-1 mx-md-4">
+                  <form class="mx-1 mx-md-4" @keyup.enter="login">
                     <div v-if="filled === false">
                       <div class="alert alert-danger" role="alert">
                         Please fill all the fields.
@@ -24,7 +24,6 @@
                       <div v-else class="alert alert-danger" role="alert">
                         {{ message }}
                       </div>
-                      <!-- Add the following div for the redirect message -->
                       <div v-if="loginSuccess" class="alert alert-info" role="alert">
                         Redirecting to home screen...
                       </div>
@@ -137,5 +136,5 @@ export default {
 </script>
 
 <style scoped>
-/* Add component-specific styles if needed */
+
 </style>

@@ -1,36 +1,48 @@
-<script setup lang="ts">
-import {ref, onMounted} from 'vue';
-
-import type {CompanyDTO} from "@/models/companyDTO";
+<script>
 import {getAllCompanies} from "@/api/companyApi";
 import CompanyCard from "@/components/CompanyCard.vue";
 
-let companies = ref([] as CompanyDTO[]);
-const loading = ref(true);
 
 
-onMounted(async () => {
-  try {
-    const apiResponse = await getAllCompanies();
-    if(apiResponse.ok) {
-      if(apiResponse.data != undefined) {
-        companies.value = apiResponse.data;
-      }
+export default {
+  name: 'HomeView',
+  components: {
+    CompanyCard
+  },
+
+  beforeRouteEnter(to, from, next) {
+    // Set the title dynamically based on route information
+    document.title = `Stock Hub - Home`;
+    next();
+  },
+  beforeRouteUpdate(to, from, next) {
+    // Set the title dynamically when the route is updated
+    document.title = `Stock Hub - Home`;
+    next();
+  },
+  data() {
+    return {
+      companies : [],
+      loading : true,
     }
-    console.log("compfav", companies.value[0].favorite)
-    loading.value = false;
-  } catch (error) {
-    console.error('Error:', error);
-    loading.value = false;
+  },
+  async mounted() {
+    try {
+      const apiResponse = await getAllCompanies();
+      if(apiResponse.ok) {
+        if(apiResponse.data !== undefined) {
+          this.companies = apiResponse.data;
+        }
+      }
+      this.loading = false;
+    } catch (error) {
+      console.error('Error:', error);
+      this.loading = false;
 
+    }
   }
-});
+}
 
-
-
-
-
-const amount = ref(0);
 
 </script>
 
@@ -39,14 +51,21 @@ const amount = ref(0);
     <div class="spinner-border" role="status"/>
     <div>Waiting for the free API to respond...</div>
   </div>
-  <div class="container" v-show="!loading">
-    <div class="row">
+  <div class="container" v-show="!this.loading">
+    <div v-if="this.companies.length > 0" class="row">
       <CompanyCard
-          v-for="com in companies"
+          v-for="com in this.companies"
           :key="com.symbol"
           :company="com"
           :isFav="com.favorite"
       />
+    </div>
+    <div v-else>
+      <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+        <div class="d-flex row ">
+          <div class="alert alert-info">Unexpected Error - No company found :( </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -66,7 +85,7 @@ const amount = ref(0);
   align-items: center;
   flex-direction: column;
   gap: 10px;
-  background-color: rgba(255, 255, 255, 0.7); /* Add a semi-transparent background overlay for visibility */
+  background-color: rgba(255, 255, 255, 0.7);
   z-index: 9999; /* Ensure it's above other content */
 }
 

@@ -8,7 +8,18 @@ import {mapGetters} from "vuex";
 
 
 export default {
+  name: "FavoriteView",
   components: {CompanyCard},
+  beforeRouteEnter(to, from, next) {
+    // Set the title dynamically based on route information
+    document.title = `Stock Hub - My Favorites`;
+    next();
+  },
+  beforeRouteUpdate(to, from, next) {
+    // Set the title dynamically when the route is updated
+    document.title = `Stock Hub - My Favorites`;
+    next();
+  },
   data() {
     return {
       companies: [],
@@ -23,11 +34,10 @@ export default {
       const apiResponse = await getFavorites();
       if(apiResponse.ok) {
 
-        toast(apiResponse.data?.length + ' favorites found');
+        toast(apiResponse.data?.length + ' favorites found', {type: "info", position: "bottom-right"});
         this.companies = apiResponse.data ?? [];
-        console.log("13122023 - companies", this.companies)
       } else {
-        toast(apiResponse.message ?? 'Error getting favorites', {type: "error"})
+        toast(apiResponse.message ?? 'Error getting favorites', {type: "error", position: "bottom-right"})
       }
       //companies.value = await getAllCompanies();
       this.loading = false;
@@ -47,7 +57,7 @@ export default {
     <div>Waiting for the free API to respond...</div>
   </div>
   <div class="container" v-show="!loading">
-    <div v-if="!this.companies.isEmpty">
+    <div v-if="this.companies.length > 0">
       <div class="row">
         <CompanyCard
             v-for="com in companies"
@@ -60,8 +70,8 @@ export default {
     <div v-else>
       <div class="container min-vh-100 d-flex justify-content-center align-items-center">
         <div class="d-flex row ">
-          <div class="alert alert-warning">No companies found in your favorites list.</div>
-          <router-link to="/" class="btn btn-success">Add Companies</router-link>
+          <div class="alert alert-info">No companies found in your favorites list.</div>
+          <router-link to="/" class="btn btn-success">Add Companies to favorite</router-link>
         </div>
       </div>
     </div>
@@ -80,7 +90,7 @@ export default {
   align-items: center;
   flex-direction: column;
   gap: 10px;
-  background-color: rgba(255, 255, 255, 0.7); /* Add a semi-transparent background overlay for visibility */
-  z-index: 9999; /* Ensure it's above other content */
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
 }
 </style>

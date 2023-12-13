@@ -16,7 +16,6 @@ export class ExpressServer {
     }
 
     private configureExpress(): void {
-        // Add request logging middleware
         this.express.use(this.requestLoggerMiddleware);
 
         this.express.use(bodyParser.json());

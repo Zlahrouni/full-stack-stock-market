@@ -38,12 +38,12 @@ export default {
       const apiResponse = await addOrRemoveFavorite(this.company.symbol, this.company.favorite);
       if (apiResponse.ok) {
         console.log("message for api", apiResponse.message)
-        toast(apiResponse.message, {type: "success"});
+        toast(apiResponse.message, {type: "success", position: "bottom-right"});
         this.company.favorite = !this.company.favorite;
 
       } else {
         console.log("error for api", apiResponse.message)
-        toast("Error: " + apiResponse.message, {type: "error"});
+        toast("Error: " + apiResponse.message, {type: "error", position: "bottom-right"});
       }
     }
   },

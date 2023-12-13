@@ -8,6 +8,7 @@ import SignUpView from "@/views/authview/SignUpView.vue";
 import LogInView from "@/views/authview/LogInView.vue";
 import store from "@/store";
 import FavoriteView from "@/views/FavoriteView.vue";
+import {toast} from "vue3-toastify";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,8 @@ router.beforeEach(async (to, from, next) => {
         next();
       }
     }
+  } else if(to.name === 'login' && isLogged || to.name === 'signup' && isLogged) {
+    next({ name: 'home' });
   } else {
     // Continue with the navigation for routes that don't require authentication
     next();

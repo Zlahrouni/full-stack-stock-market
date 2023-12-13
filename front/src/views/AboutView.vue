@@ -1,18 +1,42 @@
-<script setup lang="ts">
-
+<script>
+export default {
+  name: 'AboutView',
+  beforeRouteEnter(to, from, next) {
+    // Set the title dynamically based on route information
+    document.title = `Stock Hub - About`;
+    next();
+  },
+  beforeRouteUpdate(to, from, next) {
+    // Set the title dynamically when the route is updated
+    document.title = `Stock Hub - About`;
+    next();
+  },
+}
 </script>
 
 <template>
-  <div class="about">
-    <h1 class="display-6">About Me</h1>
+  <div class="container">
+    <h1>Welcome to StockHub</h1>
     <p class="lead">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod metus id ligula condimentum, vel feugiat urna efficitur. Vivamus id est eget tellus laoreet fermentum nec in libero. Sed at quam sed arcu dictum eleifend vel a urna. Nulla facilisi. Donec tristique lectus et ipsum lacinia, ut feugiat ligula vestibulum. Aliquam ac vestibulum nunc. Duis interdum justo eget lectus congue, eget cursus erat tristique. Cras fringilla bibendum diam, et tincidunt purus tincidunt in.
+      Explore the world of financial markets with StockHub, your go-to platform for real-time stock data. Whether you're an investor or just curious, our user-friendly interface provides valuable insights into various companies' stock prices.
     </p>
-    <p class="lead">
-      Vestibulum at velit id justo sollicitudin congue. Proin euismod sagittis mi, non congue ex scelerisque a. Nullam laoreet, libero at facilisis viverra, libero augue pellentesque quam, ut condimentum nulla felis ac nisi. Sed vehicula elit ac odio consectetur, id rhoncus elit lacinia. Integer et tincidunt turpis. Sed ut justo a elit varius venenatis. Sed non urna non tortor auctor eleifend ac nec purus.
-    </p>
+    <h2 class="mt-4">Key Features</h2>
+    <ul>
+      <li>Stay updated with real-time stock prices.</li>
+      <li>Discover detailed information about companies, including stock quotes and websites.</li>
+      <li>Create a personalized account for a customized experience.</li>
+      <li>Log in securely to unlock enhanced features.</li>
+      <li>Manage your favorite companies effortlessly.</li>
+    </ul>
+
+    <h3>Explore More</h3>
+    <li>Visit our GitHub repository:</li>
+    <a href="https://github.com/Zlahrouni/full-stack-stock-market.git" target="_blank"><pre><code>https://github.com/Zlahrouni/full-stack-stock-market</code></pre></a>
+    <li>Visit my website:</li>
+    <a href="https://ziadlahrouni.com/" target="_blank"><pre><code>https://ziadlahrouni.com/</code></pre></a>
   </div>
 </template>
+
 
 <style scoped>
 
