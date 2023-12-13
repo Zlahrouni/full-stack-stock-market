@@ -58,17 +58,12 @@ For detailed documentation on available routes and functionalities, refer to the
    npm install
    ```
 
-3. To the back:
+3. run the program on back then front:
 
    ```bash
    npm run dev
    ```
-   
-4. To the front:
 
-   ```bash
-    npm run serve
-    ```
    
 ### Configuration
 The backend uses an .env file in the back folder. You can modify the port or other configurations if needed.
