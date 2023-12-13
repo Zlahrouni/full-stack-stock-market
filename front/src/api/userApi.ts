@@ -2,21 +2,21 @@ import {User} from "@/models/user";
 import {ApiResponse} from "@/models/types/ApiReponse";
 import store from "@/store";
 
-export async function addUser(user: User): Promise<ApiResponse<User>> {
+export async function addUser(username: string, password: string): Promise<ApiResponse<User>> {
     try {
         const response = await fetch(`http://localhost:3000/api/user/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({username: username, password: password}),
         });
         if (response.ok) {
-            const userData = await response.json();
-            return new ApiResponse<User>(response.ok, userData);
+            const data = await response.json();
+            return new ApiResponse<User>(response.ok, undefined, data.message);
         } else {
-            const errorMessage = await response.text();
-            return new ApiResponse<User>(response.ok, undefined, errorMessage);
+            const data = await response.json();
+            return new ApiResponse<User>(response.ok, undefined, data.error);
         }
     } catch (error) {
         console.error('Error:', error);

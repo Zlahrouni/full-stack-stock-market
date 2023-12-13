@@ -53,9 +53,6 @@ export class ExpressServer {
 }
 
 function getBrowserName(userAgent: string): string {
-    // Implement your logic to extract the browser name from the user agent
-    // You may want to use a library like 'useragent' for more accurate parsing
-    // For simplicity, you can use a basic implementation
     if (userAgent.includes('Chrome')) {
         return 'Chrome';
     } else if (userAgent.includes('Firefox')) {

@@ -87,9 +87,7 @@
 
 
 <script>
-import {User} from "@/models/user";
 import {addUser} from "@/api/userApi";
-
 
 export default {
   data() {
@@ -149,8 +147,7 @@ export default {
         return;
       }
 
-      const user = new User(this.formData.username, this.formData.password);
-      const response = await addUser(user);
+      const response = await addUser(this.formData.username, this.formData.password);
 
       if(response.ok) {
         this.done = true;

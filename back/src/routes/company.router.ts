@@ -47,8 +47,7 @@ export class CompanyRouter {
             } catch (error) {
                 if(error instanceof Error) {
                     if (Object.values(HttpConstants).includes(error.message as HttpConstants)) {
-                        // Your logic here
-                        res.status(errorHandler(error.message as HttpConstants)).send(error.message);
+                        res.status(errorHandler(error.message as HttpConstants)).json({error: error.message});
                         return;
                     }
 
@@ -81,8 +80,7 @@ export class CompanyRouter {
             } catch (error) {
                 if(error instanceof Error) {
                     if (Object.values(HttpConstants).includes(error.message as HttpConstants)) {
-                        // Your logic here
-                        res.status(errorHandler(error.message as HttpConstants)).send(error.message);
+                        res.status(errorHandler(error.message as HttpConstants)).json({error: error.message});
                         return;
                     }
 

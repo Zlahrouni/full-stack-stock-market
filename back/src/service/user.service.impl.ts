@@ -10,13 +10,10 @@ export class UserServiceImpl implements UserService {
             return [];
         }
 
-        async addUser(user: User): Promise<User> {
-            if(user.username === undefined || user.password === undefined) {
-                throw new Error("Username or password is undefined");
-            }
+        async addUser(username: string, password: string): Promise<User> {
             return await User.create({
-                username: user.username,
-                password: await bcrypt.hash(user.password, 10)
+                username: username,
+                password: await bcrypt.hash(password, 10)
             });
         }
 
@@ -45,8 +42,19 @@ export class UserServiceImpl implements UserService {
             });
         }
 
-        async checkPassword(password: string, dbPass: string): Promise<boolean> {
-            return await bcrypt.compare(password, dbPass);
+        async login(username: string, password: string): Promise<boolean> {
+            return User.findOne({
+                where: {
+                    username: username
+                }
+            }).then((user) => {
+                if(user == null) {
+                    return false;
+                }
+                return bcrypt.compare(password, user.password).then((result) => {
+                    return result;
+                });
+            });
         }
 
         async checkIfUserExists(username: string): Promise<boolean> {

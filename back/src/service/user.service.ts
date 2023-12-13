@@ -1,9 +1,9 @@
 import {User} from "../model/user.model";
 
 export interface UserService {
-    addUser(user: User): Promise<User>;
+    addUser(username: string, password: string): Promise<User>;
     deleteUser(username: string): Promise<void>;
     getUserByUsername(username: string): Promise<User | null>;
-    checkPassword(password: string, dbPass: string): Promise<boolean>;
+    login(password: string, dbPass: string): Promise<boolean>;
     checkIfUserExists(username: string): Promise<boolean>;
 }

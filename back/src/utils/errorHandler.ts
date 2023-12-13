@@ -14,6 +14,8 @@ export function errorHandler(error: HttpConstants) {
             return HttpCodes.CONFLICT;
         case HttpConstants.FAVORITENOTFOUND:
             return HttpCodes.NOTFOUND;
+        case HttpConstants.INVALIDUSERNAMEORPASSWORD:
+            return HttpCodes.BADREQUEST;
         default:
             return HttpCodes.INTERNALSERVERERROR;
     }

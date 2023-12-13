@@ -39,8 +39,8 @@ export class TokenServiceImpl implements TokenService {
         );
     }
 
-    setToken(token: string, value: String): void {
-        Token.create(
+    async setToken(token: string, value: String) {
+        await Token.create(
             {
                 token: token,
                 username: value,
