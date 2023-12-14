@@ -49,16 +49,13 @@ For detailed documentation on available routes and functionalities, refer to the
    ```bash
    git clone https://github.com/Zlahrouni/full-stack-stock-market.git
    ```
-2. Install dependencies in the backend and frontend folders:
+2. Install dependencies in the backend and frontend folders (run the command in the back and front folder):
 
    ```bash
-   cd back
-   npm install
-   cd ../front
    npm install
    ```
 
-3. run the program on back then front:
+3. run the program on back then front (run the command in the back and front folder):
 
    ```bash
    npm run dev
