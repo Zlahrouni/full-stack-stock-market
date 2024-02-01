@@ -15,7 +15,7 @@ export class UserController {
         // Check if username already exists
         const userExist = await this.userService.checkIfUserExists(username);
         if(userExist)  {
-            console.log("13122023 - Username already exists")
+            console.log("Username already exists")
             throw new Error(HttpConstants.USERNAMEALREADYEXISTS);
         }
         await this.userService.addUser(username, password);

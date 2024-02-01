@@ -12,7 +12,9 @@
 
                   <div v-if="done">
                     <div v-if="createdSuccess" class="alert alert-success" role="alert">
-                      User created successfully. you can <router-link to="/login">log in</router-link> now
+                      User created successfully. you can
+                      <router-link to="/login">log in</router-link>
+                      now
                     </div>
                     <div v-else>
                       <div v-for="(error, index) in errors" :key="index" class="alert alert-danger" role="alert">
@@ -24,23 +26,24 @@
                   <form class="mx-1 mx-md-4" @keyup.enter="register">
 
                     <div class="d-flex flex-row align-items-center mb-4">
-                    <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                    <div class="form-outline flex-fill mb-0">
-                      <input type="text" id="name" class="form-control" v-model="formData.username" />
-                      <label class="form-label" for="name">Your Username</label>
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input type="text" id="name" class="form-control" v-model="formData.username"/>
+                        <label class="form-label" for="name">Your Username</label>
+                      </div>
                     </div>
-                  </div>
 
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
-                        <input v-if="showPassword" type="text" id="password" class="form-control" v-model="formData.password" />
-                        <input v-else type="password" id="password" class="form-control" v-model="formData.password" />
+                        <input v-if="showPassword" type="text" id="password" class="form-control"
+                               v-model="formData.password"/>
+                        <input v-else type="password" id="password" class="form-control" v-model="formData.password"/>
 
                         <label class="form-label" for="password">Password</label>
 
                         <div class="d-flex col gap-2">
-                          <input type="checkbox" id="showPassword" v-model="showPassword" />
+                          <input type="checkbox" id="showPassword" v-model="showPassword"/>
                           <div v-if="showPassword">Hide Password</div>
                           <div v-else>Show Password</div>
                         </div>
@@ -50,16 +53,19 @@
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
-                        <input v-if="!showPassword" type="password" id="repeatPassword" class="form-control" v-model="formData.repeatPassword" />
-                        <input v-else type="text" id="repeatPassword" class="form-control" v-model="formData.repeatPassword" />
+                        <input v-if="!showPassword" type="password" id="repeatPassword" class="form-control"
+                               v-model="formData.repeatPassword"/>
+                        <input v-else type="text" id="repeatPassword" class="form-control"
+                               v-model="formData.repeatPassword"/>
                         <label class="form-label" for="repeatPassword">Repeat your password</label>
                       </div>
                     </div>
 
                     <div class="form-check d-flex justify-content-center mb-5">
 
-                      <label class="form-text" >
-                        already have an account? <RouterLink to="/login">login</RouterLink>
+                      <label class="form-text">
+                        already have an account?
+                        <RouterLink to="/login">login</RouterLink>
                       </label>
                     </div>
 
@@ -87,7 +93,9 @@
 
 
 <script>
-import {addUser} from "@/api/userApi";
+import {addUser, loginUser} from "@/api/userApi";
+import {User} from "@/models/user";
+import {mapMutations} from "vuex";
 
 export default {
   data() {
@@ -99,18 +107,19 @@ export default {
       },
       passwordsDoNotMatch: false,
       createdSuccess: false,
-      done : false,
-      message : '',
+      done: false,
+      message: '',
       showPassword: false,
       errors: [],
     };
   },
   methods: {
+    ...mapMutations(['setToken', 'setLogged']),
     async register() {
 
       this.errors = [];
 
-      if(this.formData.username === '' || this.formData.password === ''){
+      if (this.formData.username === '' || this.formData.password === '') {
         this.errors.push("Username and password are required");
         this.done = true;
         return;
@@ -137,8 +146,15 @@ export default {
         this.errors.push("Username must be between 3 and 20 characters.");
       }
 
-      if (this.formData.password.length < 4 || this.formData.password.length > 40) {
-        this.errors.push("Password must be between 6 and 40 characters.");
+      // Check if password is between 6 and 40 characters and contains at least one special character and one number
+      const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+      const numberRegex = /\d/;
+
+      if (this.formData.password.length < 6 ||
+          this.formData.password.length > 40 ||
+          !specialCharRegex.test(this.formData.password) &&
+          !numberRegex.test(this.formData.password)) {
+        this.errors.push("Password must be between 6 and 40 characters, have at least one special character and one number.");
       }
 
       if (this.errors.length > 0) {
@@ -149,10 +165,29 @@ export default {
 
       const response = await addUser(this.formData.username, this.formData.password);
 
-      if(response.ok) {
+      if (response.ok) {
         this.done = true;
         this.createdSuccess = true;
         this.message = response.message;
+
+        // Call the loginUser function with the registered user's credentials
+        const user = new User(this.formData.username, this.formData.password);
+        loginUser(user).then((response) => {
+          if (response.ok) {
+            console.log("token is: ", response.data);
+            this.setToken({token: response.data});
+            this.setLogged({logged: true});
+            this.done = true;
+            this.message = 'Login successful';
+            this.loginSuccess = true;
+            this.$router.push('/');
+
+          } else {
+            this.done = true;
+            this.loginSuccess = false;
+            this.message = response.message;
+          }
+        });
       } else {
         this.done = true;
         this.createdSuccess = false;
@@ -162,6 +197,7 @@ export default {
     },
 
   },
+
 };
 </script>
 <style scoped>
