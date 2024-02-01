@@ -118,9 +118,7 @@ export default {
             this.done = true;
             this.message = 'Login successful';
             this.loginSuccess = true;
-            setTimeout(() => {
-              this.$router.push('/');
-            }, 3000);
+            this.$router.push('/');
           } else {
             this.done = true;
             this.loginSuccess = false;
